@@ -1,0 +1,16 @@
+cratedb:
+  image: crate/crate:3.1.0 
+  volumes: 
+    - /mnt/crate:/crate/data 
+    - /root/new-monitoring-service/crate.yml:/crate/config/crate.yml
+  environment:
+    CRATE_HEAP_SIZE: 2g
+  ports:
+    - 4200:4200
+    - 4300:4300 
+    - 5432:5432 
+  net: "host"
+  container_name: p8s-db02.YOUR_DOMAIN
+  hostname: p8s-db02.YOUR_DOMAIN
+  command: crate -Cnetwork.host=_global_ -Cdiscovery.zen.ping.unicast.hosts=p8s-db01.YOUR_DOMAIN
+
