@@ -1,18 +1,42 @@
-# Dockerized monitoring infrastructure 
-### Content
-* [**What is it?**](#what-is-it)
-* [**How to use it?**](#installation)
-* [**Credits**](#credits)
-
-### What is it?
-Revolves in and around prometheus, grafana and few tsdb's to chose from
-
-### How to use it? 
-After cloning, checkout the appropriate branch for configs. Using one VM per branch.
-Use "git branch -a" to view all the branches. 
-
-- prometheus: prometheus master, alertmanager, externals that should be placed on host server
-
-### Credits
-To all good people on github and beyond, which configs I reused - very little was pulled out of my ass. You expected something else under credits, didn't you!? ;) 
-
+# tree
+Go trough configs and adjust whereever you see CAPITALISED settings/values.
+"
+├── etc
+│   └── salt
+│       ├── master.d
+│       │   └── reactor.conf
+│       ├── minion.d
+│       │   └── beacons.conf
+│       └── pki
+│           └── master
+│               └── minions
+│                   └── exclude_me
+├── README.md
+└── srv
+    ├── reactor
+    │   └── p8s-file_sd_config.sls
+    └── salt
+        ├── p8s
+        │   ├── config.sls
+        │   ├── files
+        │   │   ├── p8s-telegraf.logrotate.jinja
+        │   │   ├── targets.json
+        │   │   ├── targets.sha1
+        │   │   └── telegraf
+        │   │       ├── etc
+        │   │       │   └── telegraf
+        │   │       │       └── telegraf.conf.jinja
+        │   │       ├── scripts
+        │   │       │   ├── init.sh
+        │   │       │   ├── telegraf
+        │   │       │   └── telegraf.service
+        │   │       └── usr
+        │   │           └── bin
+        │   │               └── telegraf
+        │   ├── generate-p8s-file_sd_config.sls
+        │   ├── init.sls
+        │   └── logging.sls
+        └── _runners
+            ├── p8s-file_sd_config.py
+            └── p8s-file_sd_config.pyc
+"
