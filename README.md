@@ -1,6 +1,6 @@
 # tree
 Go trough configs and adjust whereever you see CAPITALISED settings/values.
-"
+```
 ├── etc
 │   └── salt
 │       ├── master.d
@@ -39,4 +39,4 @@ Go trough configs and adjust whereever you see CAPITALISED settings/values.
         └── _runners
             ├── p8s-file_sd_config.py
             └── p8s-file_sd_config.pyc
-"
+```
