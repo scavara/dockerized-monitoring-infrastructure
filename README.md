@@ -1,5 +1,5 @@
 # Dockerized monitoring infrastructure 
-
+Go trough configs and adjust whereever you see CAPITALISED settings/values.
 "
 ├── configs
 │   ├── alerting-rules.d
