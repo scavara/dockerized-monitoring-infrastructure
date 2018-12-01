@@ -1,6 +1,6 @@
 # Dockerized monitoring infrastructure 
 Go trough configs and adjust whereever you see CAPITALISED settings/values.
-"
+```
 ├── configs
 │   ├── alerting-rules.d
 │   │   └── first.rules
@@ -18,4 +18,4 @@ Go trough configs and adjust whereever you see CAPITALISED settings/values.
 │               ├── crate_adapter
 │               └── promtool
 └── README.md
-"
+```
