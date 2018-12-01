@@ -23,7 +23,7 @@ scrape_configs:
     - targets: ['127.0.0.1:9090']
 
   - job_name: 'federate'
-    scrape_interval: 60s
+    scrape_interval: 10s
 
     honor_labels: true
     metrics_path: '/federate'
@@ -40,7 +40,7 @@ scrape_configs:
         #- 'p8s-slave02:9090'
         #- 'p8s-slave03:9090'
 
-#CUSTOMIZE TO YOUR NEEDS - BELOW IS JUST AN EXAMPLE
+# SAMPLE CONFIG TO USE WITH CRATEDB (VIA ADAPTER) WITH SOME EXCLUDED METRICS - CUSTOMIZE!
 remote_write:
   - url: http://172.17.0.1:9268/write
     write_relabel_configs:

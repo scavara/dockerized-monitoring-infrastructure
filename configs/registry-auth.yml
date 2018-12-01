@@ -7,7 +7,7 @@ server:
   key: "/config/YOUR_PROPER.key"
 
 token:
-  issuer: "Architechs docker registry"
+  issuer: "YOUR_COMPANY docker registry"
   expiration: 900
 
 users:

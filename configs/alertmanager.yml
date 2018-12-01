@@ -2,7 +2,7 @@ global:
   resolve_timeout: 5m
   # The smarthost and SMTP sender used for mail notifications.
   smtp_smarthost: '172.17.0.1:25'
-  smtp_from: 'Architechs Prometheus Alertmanager <alertmanager@YOUR_DOMAIN>'
+  smtp_from: 'YOUR_COMPANY Prometheus Alertmanager <alertmanager@YOUR_DOMAIN>'
   smtp_require_tls: false
 route:
   group_by: ['alertname']
