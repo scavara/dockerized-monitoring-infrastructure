@@ -1,6 +1,6 @@
 # tree
 Go trough configs and adjust wherever you see CAPITALISED settings/values.
-"
+```
 ├── bins
 │   └── oauth2_proxy
 ├── configs
@@ -38,4 +38,4 @@ Go trough configs and adjust wherever you see CAPITALISED settings/values.
                 ├── amtool
                 ├── crate_adapter
                 └── promtool
-"
+```
