@@ -1,0 +1,53 @@
+# my global config
+global:
+  scrape_interval:     30s # Set the scrape interval to every 30 seconds. Default is every 1 minute.
+  evaluation_interval: 10s # Evaluate rules every 10 seconds. The default is every 1 minute.
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  # change to scheme: https when 's' is ready...scavara-02082018
+  - scheme: http
+    static_configs:
+    - targets: ['alertmanager_node01:9093','alertmanager_node02:9093']
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files: 
+  - 'alerting-rules.d/*.rules'
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  - job_name: 'p8s-master'
+    static_configs:
+    - targets: ['127.0.0.1:9090']
+
+  - job_name: 'federate'
+    scrape_interval: 60s
+
+    honor_labels: true
+    metrics_path: '/federate'
+
+    params:
+      'match[]':
+        - '{job=~"job.*"}'
+       # all metrics...for now
+       # - '{__name__=~".*"}'
+
+    static_configs:
+      - targets:
+        - 'p8s-slave01.YOUR_DOMAIN:9090'
+        #- 'p8s-slave02:9090'
+        #- 'p8s-slave03:9090'
+
+#CUSTOMIZE TO YOUR NEEDS - BELOW IS JUST AN EXAMPLE
+remote_write:
+  - url: http://172.17.0.1:9268/write
+    write_relabel_configs:
+    - source_labels: [__name__]
+      regex:         (prometheus.*|go_*)
+      action:        drop
+ 
+remote_read:
+  - url: http://172.17.0.1:9268/read
+

@@ -1,0 +1,30 @@
+
+#tnx to https://github.com/cesanta/docker_auth/blob/master/examples/reference.yml
+server:
+  addr: ":5001"
+  path_prefix: ""
+  certificate: "/config/YOUR_PROPER.crt"
+  key: "/config/YOUR_PROPER.key"
+
+token:
+  issuer: "Architechs docker registry"
+  expiration: 900
+
+users:
+  "admin":
+    password: "$XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"  #GENERATE_YOURSELF_USING_htpasswd 
+
+google_auth:
+  domain: "YOUR_DOMAIN"  # Optional. If set, only logins from this domain are accepted.
+  client_id: "YOUR_OAUTH_CLIENT_ID"
+  client_secret: "AND_ITS_SECRET"
+  token_db: "/etc/google_tokens.ldb"
+  http_timeout: 10
+  
+acl:
+  - match: {account: "admin"}
+    actions: ["*"]
+    comment: "Admin has full access to everything."
+  - match: {account: "/.+/"}
+    actions: ["*"]
+    comment: "Logged in users have access to everything."

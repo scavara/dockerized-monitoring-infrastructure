@@ -1,0 +1,17 @@
+# -*- mode: conf -*-
+
+[Unit]
+Description=Prometheus adapter to write to CrateDB
+Documentation=https://github.com/crate/crate_adapter/
+After=network.target
+
+[Service]
+User=root
+ExecStart=/usr/local/sbin/crate_adapter -config.file /etc/crate_adapter/config.yml 
+ExecReload=/bin/kill -HUP `pgrep crate_adapter` 
+Restart=on-failure
+LimitNOFILE=65536
+LimitNPROC=4096
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,33 @@
+global:
+  resolve_timeout: 5m
+  # The smarthost and SMTP sender used for mail notifications.
+  smtp_smarthost: '172.17.0.1:25'
+  smtp_from: 'Architechs Prometheus Alertmanager <alertmanager@YOUR_DOMAIN>'
+  smtp_require_tls: false
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  # A default receiver
+  receiver: team-YOUR_COMPANY-mails
+  
+  routes:
+    # Send severity=slack alerts to slack.
+  - match:
+     severity: 'critical' # send only critical alerts
+    receiver: slack_monitoring
+receivers:
+- name: 'team-YOUR_COMPANY-mails'
+  email_configs:
+  - to: 'scavara@YOUR_DOMAIN'
+- name: slack_monitoring
+  slack_configs:
+  - api_url: https://hooks.slack.com/services/GET_YOUR_OWN 
+    channel: '#alerts'
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'dev', 'instance']

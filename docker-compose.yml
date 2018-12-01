@@ -1,0 +1,85 @@
+alertmanager_node01:
+  image: prom/alertmanager
+  volumes: 
+    - ./configs/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+  ports:
+    - 9095:9093
+  container_name: alertmanager_node01
+  command:
+     - '--cluster.peer=alertmanager_node02:9094'
+  net: p8s
+
+alertmanager_node02:
+  image: prom/alertmanager
+  volumes: 
+    - ./configs/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+  ports:
+    - 9093:9093
+  container_name: alertmanager_node02
+  command:
+    - '--cluster.peer=alertmanager_node01:9094'
+  net: p8s
+
+prometheus:
+  image: prom/prometheus 
+  volumes: 
+    - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
+    - ./configs/alerting-rules.d/first.rules:/etc/prometheus/alerting-rules.d/first.rules
+    - /mnt/prometheus:/data
+  command:
+    - '--config.file=/etc/prometheus/prometheus.yml'
+    - '--storage.tsdb.path=/data'
+    - '--storage.tsdb.retention=10d'
+  ports:
+    - 9090:9090
+  container_name: prometheus
+  net: p8s
+
+nginx_reverseproxy:
+  image: library/nginx
+  volumes: 
+    - ./configs/nginx/alertmanager.yml:/etc/nginx/nginx.conf
+    - ./configs/nginx/sites.d/p8s-master:/etc/nginx/sites.d/p8s-master
+    - ./configs/nginx/certs.d/YOUR_PROPER.key:/etc/nginx/certs.d/YOUR_PROPER.key
+    - ./configs/nginx/certs.d/YOUR_PROPER.crt:/etc/nginx/certs.d/YOUR_PROPER.crt
+    - ./configs/nginx/nginx.conf:/etc/nginx/nginx.conf
+  ports:
+    - 80:80
+    - 443:443
+  container_name: nginx_reverseproxy
+  net: p8s
+
+oauth2_proxy:
+  image: machinedata/oauth2_proxy
+  volumes:
+    - ./configs/oauth2_proxy.cfg:/etc/oauth2_proxy.cfg
+  ports:
+    - 127.0.0.1:4180:4180
+  container_name: oauth2_proxy 
+  net: p8s
+  command: -config /etc/oauth2_proxy.cfg -set-xauthrequest
+
+registry:
+  image: registry:2
+  volumes:
+    - /mnt/registry:/var/lib/registry
+    - ./configs/registry.yml:/etc/docker/registry/config.yml
+    - ./configs/nginx/certs.d/YOUR_PROPER.crt:/etc/docker/registry/YOUR_PROPER.crt
+  ports:
+    - 127.0.0.1:5000:5000
+  container_name: registry
+  net: p8s
+
+registry_auth:
+  image: cesanta/docker_auth 
+  volumes:
+    - /mnt/registry/google_tokens.ldb:/etc/google_tokens.ldb
+    - ./configs:/config.yml
+    - ./configs/registry-auth.yml:/config/auth_config.yml
+    - ./configs/nginx/certs.d/YOUR_PROPER.crt:/config/YOUR_PROPER.crt
+    - ./configs/nginx/certs.d/YOUR_PROPER.key:/config/YOUR_PROPER.key
+  ports:
+    - 5001:5001
+  container_name: registry_auth
+  net: p8s
+

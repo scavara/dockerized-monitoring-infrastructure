@@ -1,0 +1,91 @@
+  server {
+    listen 80;
+    server_name p8s-registry.YOUR_DOMAIN;
+    return 301 https://$host$request_uri;
+  }
+
+  server {
+    listen 443 ssl;
+    server_name p8s-registry.YOUR_DOMAIN;
+
+    ssl_certificate /etc/nginx/certs.d/YOUR_PROPER.crt;
+    ssl_certificate_key /etc/nginx/certs.d/YOUR_PROPER.key;
+
+   location /v2 {
+     client_max_body_size 200M;
+     proxy_pass http://registry:5000/v2;
+   }
+
+   location /auth {
+     proxy_pass https://registry_auth:5001/auth;
+   }
+
+   location / {
+     proxy_pass https://registry_auth:5001;
+   }
+} 
+ 
+  server {
+    listen 80;
+    server_name p8s-master.YOUR_DOMAIN;
+    return 301 https://$host$request_uri;
+  }
+
+  server {
+    listen 443 ssl;
+    server_name p8s-master.YOUR_DOMAIN;
+
+    ssl_certificate /etc/nginx/certs.d/YOUR_PROPER.crt;
+    ssl_certificate_key /etc/nginx/certs.d/YOUR_PROPER.key;
+
+
+    location /oauth2/ {
+      proxy_pass       http://oauth2_proxy:4180;
+      proxy_set_header Host                    $host;
+      proxy_set_header X-Real-IP               $remote_addr;
+      proxy_set_header X-Scheme                $scheme;
+      proxy_set_header X-Auth-Request-Redirect $request_uri;
+    }
+    
+    location = /oauth2/auth {
+      proxy_pass       http://oauth2_proxy:4180;
+      proxy_set_header Host             $host;
+      proxy_set_header X-Real-IP        $remote_addr;
+      proxy_set_header X-Scheme         $scheme;
+      # nginx auth_request includes headers but not body
+      proxy_set_header Content-Length   "";
+      proxy_pass_request_body           off;
+    }
+  
+  
+    location / {
+      auth_request /oauth2/auth;
+      error_page 401 = /oauth2/sign_in;
+
+      auth_request_set $user   $upstream_http_x_auth_request_user;
+      auth_request_set $email  $upstream_http_x_auth_request_email;
+      proxy_set_header X-User  $user;
+      proxy_set_header X-Email $email;
+      auth_request_set $auth_cookie $upstream_http_set_cookie;
+      add_header Set-Cookie $auth_cookie;
+
+      proxy_pass http://prometheus:9090;
+    }
+
+    location /alertmanager/ {
+      auth_request /oauth2/auth;
+      error_page 401 = /oauth2/sign_in;
+
+      auth_request_set $user   $upstream_http_x_auth_request_user;
+      auth_request_set $email  $upstream_http_x_auth_request_email;
+      proxy_set_header X-User  $user;
+      proxy_set_header X-Email $email;
+      auth_request_set $auth_cookie $upstream_http_set_cookie;
+      add_header Set-Cookie $auth_cookie; rewrite_log off;
+      rewrite ^/alertmanager(.*) $1 break;
+      proxy_pass http://alertmanagers;
+      proxy_redirect off;
+    }
+    
+  }
+
