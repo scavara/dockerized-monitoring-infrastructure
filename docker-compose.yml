@@ -1,0 +1,16 @@
+prometheus:
+  image: prom/prometheus 
+  volumes: 
+    - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
+    - ./configs/alerting-rules.d/first.rules:/etc/prometheus/alerting-rules.d/first.rules
+    - ./configs/recording-rules.d/first.rules:/etc/prometheus/recording-rules.d/first.rules
+    - /mnt/targets/targets.json:/etc/prometheus/targets.json
+    - /mnt/prometheus:/data
+  command:
+    - '--config.file=/etc/prometheus/prometheus.yml'
+    - '--storage.tsdb.path=/data'
+    - '--storage.tsdb.retention=10d'
+  ports:
+    - 9090:9090
+  container_name: prometheus
+  net: host
