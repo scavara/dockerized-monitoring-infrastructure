@@ -24,16 +24,31 @@ prometheus:
   image: prom/prometheus 
   volumes: 
     - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
-    - ./configs/alerting-rules.d/first.rules:/etc/prometheus/alerting-rules.d/first.rules
+    - ./configs/recording-rules.d/recording.rules:/etc/prometheus/recording-rules.d/recording.rules
     - /mnt/prometheus:/data
   command:
     - '--config.file=/etc/prometheus/prometheus.yml'
     - '--storage.tsdb.path=/data'
     - '--storage.tsdb.retention=10d'
+#    - '--log.level=debug'
   ports:
     - 9090:9090
   container_name: prometheus
   net: p8s
+  links:
+    - cadvisor
+
+cadvisor:
+   image: google/cadvisor:latest
+   container_name: cadvisor
+   ports:
+     - 8080:8080
+   volumes:
+     - /:/rootfs:ro
+     - /var/run:/var/run:rw
+     - /sys:/sys:ro
+     - /var/lib/docker/:/var/lib/docker:ro
+   net: p8s
 
 grafana:
   image: grafana/grafana                                                                                                                                   
@@ -59,6 +74,8 @@ nginx_reverseproxy:
     - 443:443
   container_name: nginx_reverseproxy
   net: p8s
+  links: 
+    - prometheus
 
 oauth2_proxy:
   image: machinedata/oauth2_proxy

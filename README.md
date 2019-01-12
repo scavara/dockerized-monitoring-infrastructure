@@ -1,3 +1,4 @@
+# check master branch for more info!
 # tree
 Go trough configs and adjust wherever you see CAPITALISED settings/values.
 ```
