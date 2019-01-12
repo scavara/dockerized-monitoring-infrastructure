@@ -1,4 +1,4 @@
- # Dockerized monitoring infrastructure 
+# Dockerized monitoring infrastructure 
 ### Content
 * [**What is it?**](#what-is-it)
 * [**How to use it?**](#installation)
