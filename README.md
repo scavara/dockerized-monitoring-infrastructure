@@ -134,10 +134,72 @@ touch /opt/opentsdb_tables_created.txt
 ./start-master.sh
 OR
 ./start-slave.sh
-
+#Tree
+```
+├── externals
+│   └── etc
+│       ├── haproxy
+│       │   └── haproxy.cfg
+│       └── varnish
+│           └── default.vcl
+├── hadoop-hbase-base
+│   ├── Dockerfile
+│   └── files
+│       ├── bashrc
+│       ├── hadoop-lzo.tar.gz
+│       ├── hbase-env.cmd
+│       └── hbase-env.sh
+├── hadoop-hbase-master
+│   ├── docker-entrypoint.sh
+│   ├── Dockerfile
+│   └── files
+│       ├── hadoop
+│       │   ├── configure-members.sh
+│       │   ├── core-site.xml
+│       │   ├── hdfs-site.xml
+│       │   ├── mapred-site.xml
+│       │   ├── run-wordcount.sh
+│       │   ├── start-hadoop.sh
+│       │   ├── start-ssh-serf.sh
+│       │   ├── stop-hadoop.sh
+│       │   └── yarn-site.xml
+│       └── hbase
+│           ├── hbase-site.xml
+│           ├── start-hbase.sh
+│           └── stop-hbase.sh
+├── hadoop-hbase-opentsdb-master
+│   ├── Dockerfile
+│   └── files
+│       ├── config
+│       ├── create_table.sh
+│       ├── opentsdb
+│       ├── opentsdb.conf
+│       ├── rollup_config.json
+│       └── start-opentsdb.sh
+├── hadoop-hbase-opentsdb-slave
+│   ├── Dockerfile
+│   └── files
+│       ├── config
+│       ├── opentsdb
+│       ├── opentsdb.conf
+│       └── rollup_config.json
+├── hadoop-hbase-slave
+│   ├── Dockerfile
+│   └── files
+│       ├── hadoop
+│       │   ├── core-site.xml
+│       │   ├── hdfs-site.xml
+│       │   ├── mapred-site.xml
+│       │   ├── start-ssh-serf.sh
+│       │   └── yarn-site.xml
+│       └── hbase
+│           └── hbase-site.xml
+├── README.md
+├── start-master.sh
+└── start-slave.sh
+```
 
 prometheus
-# check master branch for more info!
 # tree
 Go trough configs and adjust wherever you see CAPITALISED settings/values.
 ```
@@ -180,7 +242,7 @@ Go trough configs and adjust wherever you see CAPITALISED settings/values.
                 └── promtool
 ```
 prometheus-slave
-# Dockerized monitoring infrastructure 
+# tree  
 Go trough configs and adjust whereever you see CAPITALISED settings/values.
 ```
 ├── configs
