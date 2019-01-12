@@ -33,3 +33,4 @@ scrape_configs:
     file_sd_configs:
       - files:
         - targets.json
+        refresh_interval: 30s

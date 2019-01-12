@@ -1,5 +1,5 @@
 prometheus:
-  image: prom/prometheus 
+  image: prom/prometheus
   volumes: 
     - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
     - ./configs/alerting-rules.d/first.rules:/etc/prometheus/alerting-rules.d/first.rules
@@ -12,5 +12,17 @@ prometheus:
     - '--storage.tsdb.retention=10d'
   ports:
     - 9090:9090
-  container_name: prometheus
-  net: host
+  container_name: prometheus-slave01
+  net: p8s
+
+cadvisor:
+   image: google/cadvisor:latest
+   container_name: cadvisor-slave01
+   ports:
+     - 8080:8080
+   volumes:
+     - /:/rootfs:ro
+     - /var/run:/var/run:rw
+     - /sys:/sys:ro
+     - /var/lib/docker/:/var/lib/docker:ro
+   net: p8s 
